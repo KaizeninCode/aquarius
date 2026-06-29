@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { View, TextInput, Button, Text } from "react-native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { PhoneAuthProvider } from "firebase/auth";
-import { auth } from "../../FirebaseConfig";
+import { auth } from "../../firebaseConfig";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
@@ -34,12 +34,12 @@ const LoginScreen = () => {
         <FirebaseRecaptchaVerifierModal
           ref={recaptchaVerifier}
           firebaseConfig={auth.app.options}
-          // className="flex-1 bg-red-300"
+        //   className="flex-1 bg-red-300"
         />
 
         <Text className="text-2xl mb-5 font-semibold">Enter your phone number (start with +254)</Text>
         <TextInput
-          placeholder="+254700123456"
+          placeholder="+254722777888"
           placeholderTextColor={'gray'}
           value={phone}
           onChangeText={setPhone}

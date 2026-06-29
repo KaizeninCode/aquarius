@@ -1,8 +1,10 @@
 import { Redirect } from "expo-router";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
 export default function Index() {
   return (
-    <Redirect href={'/(tabs)/JobScreen'}/>
+    <View className="flex-1 items-center justify-center">
+      <ActivityIndicator size={'large'}/>
+    </View>
   );
 }
