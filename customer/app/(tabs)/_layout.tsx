@@ -66,7 +66,7 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="Profile"
+        name="profile"
         options={{
           title: "Profile",
           tabBarIcon: ({ focused, size, color }) => (

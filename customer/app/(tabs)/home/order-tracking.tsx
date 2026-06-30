@@ -22,7 +22,7 @@ type Order = {
 };
 
 const STATUS_STEPS: { key: OrderStatus; label: string }[] = [
-  { key: "placed", label: "Order Placed" },
+  { key: "placed", label: "Placed" },
   { key: "confirmed", label: "Confirmed" },
   { key: "assigned", label: "Driver Assigned" },
   { key: "out_for_delivery", label: "Out For Delivery" },
@@ -153,21 +153,31 @@ const OrderTrackingScreen = () => {
       <View className="border border-slate-200 rounded-xl p-4">
         <Text className="text-sm text-slate-500 mb-2">Order Summary</Text>
         {order.items.map((item, i) => (
-            <View className="flex-row justify-between mb-1" key={i}>
-                <Text className="text-slate-700">
-                    {item.name} x {item.quantity}
-                </Text>
-                <Text className="text-slate-700">
-                    KES {item.price * item.quantity}
-                </Text>
-            </View>
+          <View className="flex-row justify-between mb-1" key={i}>
+            <Text className="text-slate-700">
+              {item.name} x {item.quantity}
+            </Text>
+            <Text className="text-slate-700">
+              KES {item.price * item.quantity}
+            </Text>
+          </View>
         ))}
 
         <View className="flex-row justify-between mt-3 pt-3 border-t border-slate-100">
-            <Text className="font-semibold">Total</Text>
-            <Text className="font-bold">KES {order.totalAmount}</Text>
+          <Text className="font-semibold">Total</Text>
+          <Text className="font-bold">KES {order.totalAmount}</Text>
         </View>
+
       </View>
+        {/* buttons to navigate elsewhere */}
+        <View className="flex-row justify-center gap-16 mt-auto">
+          <TouchableOpacity onPress={() => router.replace("/(tabs)/home")}>
+            <Text className="bg-blue-500 text-white px-4 py-2 rounded-xl font-medium">Place new order</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.replace("/(tabs)/OrderHistory")}>
+            <Text className="bg-blue-500 text-white px-4 py-2 rounded-xl font-medium">See your orders</Text>
+          </TouchableOpacity>
+        </View>
     </SafeAreaView>
   );
 };

@@ -151,7 +151,7 @@ const CheckoutPage = () => {
         )}
         <TouchableOpacity
           className="mt-2"
-          onPress={() => router.push("/(account-setup)/address-picker")}
+          onPress={() => router.push("/(tabs)/home/edit-address")}
         >
           <Text className="text-blue-500 text-sm font-medium">
             Change address
