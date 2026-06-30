@@ -6,6 +6,7 @@ import { View, ActivityIndicator } from "react-native";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/FirebaseConfig";
 import { SetupProvider } from "./context/SetupContext";
+import { CartProvider } from "./context/CartContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type AppState = "loading" | "signedOut" | "main";
@@ -62,7 +63,7 @@ export default function RootLayout() {
         router.replace(hasSeenIntro ? "/(auth)/login" : "/(intro)/welcome");
       }
     } else if (appState === "main" && !inTabsGroup) {
-      router.replace("/(tabs)/Home");
+      router.replace("/(tabs)/home");
     }
   }, [appState, hasSeenIntro, segments, router]);
 
@@ -77,7 +78,9 @@ export default function RootLayout() {
   return (
     <SetupProvider>
       <StatusBar style="dark" />
-      <Slot />
+      <CartProvider>
+        <Slot />
+      </CartProvider>
     </SetupProvider>
   );
 }

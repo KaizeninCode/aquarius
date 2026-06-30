@@ -17,7 +17,7 @@ const TabIcon = ({ size, name, color }: TabIconProps) => (
 const TabsLayout = () => {
   return (
     <Tabs
-      initialRouteName="Home"
+      initialRouteName="home"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -38,7 +38,7 @@ const TabsLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="Home"
+        name="home"
         options={{
           title: "Home",
           tabBarIcon: ({ focused, size, color }) => (

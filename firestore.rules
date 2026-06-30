@@ -24,9 +24,14 @@ service cloud.firestore {
       allow update: if isSignedIn() && resource.data.driverId == request.auth.uid;
     }
 
-    match /addresses/{addressId} {
-      allow read, write: if isSignedIn() &&
-        request.resource.data.userId == request.auth.uid;
+    match /products/{productId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
     }
+
+    match /addresses/{addressId} {
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+}
   }
 }
