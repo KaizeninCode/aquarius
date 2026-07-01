@@ -43,7 +43,7 @@ const LoginScreen = () => {
           placeholderTextColor={'gray'}
           value={phone}
           onChangeText={setPhone}
-          className="rounded-lg border border-slate-100/50 p-3"
+          className="rounded-lg border border-slate-300 p-3 mb-6"
         />
         <Button title="Send Code" onPress={sendCode} />
       </View>

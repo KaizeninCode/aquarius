@@ -12,6 +12,7 @@ import { db, auth } from "@/firebaseConfig";
 import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { registerPushToken } from "@/utils/registerPushToken";
+import { useSetup } from "@/context/SetupContext";
 
 
 const ConfirmCodeScreen = () => {
@@ -22,6 +23,7 @@ const ConfirmCodeScreen = () => {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const {setupData, clearSetupData} = useSetup()
 
   const confirmCode = async () => {
     try {
@@ -33,10 +35,11 @@ const ConfirmCodeScreen = () => {
 
       // write user document to firestore
       await setDoc(doc(db, "users", userId), {
-        name: null,
+        name: setupData.name,
         phone: userCredential.user.phoneNumber,
         role: "driver",
         isAvailable: false,
+        onboardingComplete: true,
         currentLng: null,
         currentLat: null,
         createdAt: serverTimestamp(),
@@ -45,6 +48,7 @@ const ConfirmCodeScreen = () => {
       // register push token
       await registerPushToken(userId)
 
+      clearSetupData();
 
       // navigate to the home screen
       router.replace("/(tabs)/job-screen");
@@ -58,14 +62,14 @@ const ConfirmCodeScreen = () => {
       <View className="rounded-lg p-5 w-full">
         <Text className='text-lg font-semibold mb-5 text-black text-center'>Enter the code sent to your phone</Text>
         <TextInput
-          className="rounded-lg border border-black p-3 mt-5"
+          className="rounded-lg border border-slate-300 p-3 mb-6"
           placeholder="Enter code"
           placeholderTextColor={'gray'}
           value={code}
           onChangeText={setCode}
         />
 
-        {error && <Text className="font-red-500 mb-2.5">{error}</Text>}
+        {error && <Text className="font-red-500 my-2.5">{error}</Text>}
 
         <Button title="Confirm" onPress={confirmCode} />
       </View>
