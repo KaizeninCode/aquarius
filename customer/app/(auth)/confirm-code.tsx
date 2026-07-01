@@ -12,6 +12,7 @@ import {
 import { db, auth } from "@/FirebaseConfig";
 import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { registerPushToken } from "@/utils/registerPushToken";
 
 const ConfirmCodeScreen = () => {
   const { verificationId } = useLocalSearchParams<{
@@ -54,10 +55,13 @@ const ConfirmCodeScreen = () => {
         createdAt: serverTimestamp(),
       });
 
+      // register push token
+      await registerPushToken(userId)
+
       clearSetupData();
 
       // navigate to the home screen
-      router.replace("/(tabs)/Home");
+      router.replace("/(tabs)/home");
     } catch (error) {
       console.error("Invalid code: ", error);
       setError("Invalid code. Please try again.");
@@ -66,11 +70,13 @@ const ConfirmCodeScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-white justify-center items-center p-5">
       <View className="rounded-lg p-5 w-full">
-        <Text className='text-lg font-semibold mb-5 text-black text-center'>Enter the code sent to your phone</Text>
+        <Text className="text-lg font-semibold text-black text-center">
+          Enter the code sent to your phone
+        </Text>
         <TextInput
-          className="rounded-lg border border-black p-3 mt-5"
+          className="rounded-2xl border border-slate-200 p-3 my-5"
           placeholder="Enter code"
-          placeholderTextColor={'gray'}
+          placeholderTextColor={"gray"}
           value={code}
           onChangeText={setCode}
         />

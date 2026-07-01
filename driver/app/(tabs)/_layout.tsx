@@ -2,6 +2,18 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { ColorValue } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as Notifications from 'expo-notifications'
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: false,
+
+  })
+})
 
 interface TabIconProps {
   focused: boolean;
@@ -17,12 +29,12 @@ const TabIcon = ({ size, name, color }: TabIconProps) => (
 const TabsLayout = () => {
   return (
     <Tabs
-      initialRouteName="JobScreen"
+      initialRouteName="job-screen"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
           //   backgroundColor: "#696047",
-          borderColor: '#0a0a0a',
+          // borderColor: '#0a0a0a',
         //   borderRadius: 40,
         //   paddingBottom: 30,
           overflow: "hidden",
@@ -38,7 +50,7 @@ const TabsLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="JobScreen"
+        name="job-screen"
         options={{
           title: "Jobs",
           tabBarIcon: ({ focused, size, color }) => (
@@ -52,12 +64,12 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="DeliveryDetail"
+        name="order-history"
         options={{
-          title: "Deliveries",
+          title: "Order History",
           tabBarIcon: ({ focused, size, color }) => (
             <TabIcon
-              name={focused ? "book" : "book-outline"}
+              name={focused ? "timer" : "timer-outline"}
               color={color}
               size={size}
               focused={focused}

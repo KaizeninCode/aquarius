@@ -22,7 +22,7 @@ const TabsLayout = () => {
         headerShown: false,
         tabBarStyle: {
           //   backgroundColor: "#696047",
-          borderColor: '#0a0a0a',
+          // borderColor: '#0a0a0a',
         //   borderRadius: 40,
         //   paddingBottom: 30,
           overflow: "hidden",
@@ -33,6 +33,7 @@ const TabsLayout = () => {
           justifyContent: "space-between",
           alignItems: "center",
           flexDirection: "row",
+          animationName: 'slide'
         //   position: "absolute",
         },
       }}

@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { View, ActivityIndicator } from "react-native";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
+import * as Notifications from 'expo-notifications'
 
 type AppState = "loading" | "signedOut" | "main";
 
@@ -41,9 +42,22 @@ export default function RootLayout() {
       router.replace("/(auth)/login" );
       
     } else if (appState === "main" && !inTabsGroup) {
-      router.replace("/(tabs)/JobScreen");
+      router.replace("/(tabs)/job-screen");
     }
   }, [appState, segments, router]);
+
+// navigate to order/delivery tracking when notification is tapped
+  useEffect(() => {
+  const subscription = Notifications.addNotificationResponseReceivedListener(
+    (response) => {
+      const orderId = response.notification.request.content.data?.orderId;
+      if (orderId) {
+        router.push(`/(tabs)/job-screen/delivery-detail?orderId=${orderId}`);
+      }
+    }
+  );
+  return () => subscription.remove();
+}, []);
 
   if (appState === "loading") {
     return (

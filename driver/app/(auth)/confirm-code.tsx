@@ -11,6 +11,8 @@ import {
 import { db, auth } from "@/firebaseConfig";
 import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { registerPushToken } from "@/utils/registerPushToken";
+
 
 const ConfirmCodeScreen = () => {
   const { verificationId } = useLocalSearchParams<{
@@ -40,9 +42,12 @@ const ConfirmCodeScreen = () => {
         createdAt: serverTimestamp(),
       });
 
+      // register push token
+      await registerPushToken(userId)
+
 
       // navigate to the home screen
-      router.replace("/(tabs)/JobScreen");
+      router.replace("/(tabs)/job-screen");
     } catch (error) {
       console.error("Invalid code: ", error);
       setError("Invalid code. Please try again.");

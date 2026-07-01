@@ -7,21 +7,30 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function isAdmin() {
+      return isSignedIn() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin"
+    }
+
     match /users/{userId} {
-      allow read: if isSignedIn();
-      allow write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isSignedIn() && 
+        request.auth.uid == userId || isAdmin();
+      allow write: if isSignedIn() && 
+        request.auth.uid == userId 
     }
 
     match /orders/{orderId} {
       allow read: if isSignedIn() &&
         (resource.data.customerId == request.auth.uid ||
-         resource.data.driverId == request.auth.uid);
+         resource.data.driverId == request.auth.uid) || 
+         isAdmin();
 
       allow create: if isSignedIn() &&
         request.resource.data.customerId == request.auth.uid &&
         request.resource.data.status == "placed";
 
-      allow update: if isSignedIn() && resource.data.driverId == request.auth.uid;
+      allow update: if isSignedIn() && 
+        (resource.data.driverId == request.auth.uid || resource.data.userId == request.auth.uid && (request.resource.data.status == "assigned" || request.resource.data.status == "out_for_delivery") || isAdmin());
     }
 
     match /products/{productId} {
