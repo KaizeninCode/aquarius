@@ -7,7 +7,10 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/FirebaseConfig";
 import { SetupProvider } from "./context/SetupContext";
 import { CartProvider } from "./context/CartContext";
+import { UserProvider } from "./context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
 
 type AppState = "loading" | "signedOut" | "main";
 
@@ -48,6 +51,7 @@ export default function RootLayout() {
   // redirect based on state, comparing against the current route group
   useEffect(() => {
     if (appState === "loading") return;
+    if (hasSeenIntro === null) return;
     const group = segments[0];
     // console.log('Redirect check — appState:', appState, 'group:', group, 'segments:', segments)
 
@@ -76,11 +80,14 @@ export default function RootLayout() {
   }
 
   return (
-    <SetupProvider>
-      <StatusBar style="dark" />
-      <CartProvider>
-        <Slot />
-      </CartProvider>
-    </SetupProvider>
+    <SafeAreaProvider>
+      <SetupProvider>
+      <UserProvider>
+        <StatusBar style="dark" />
+        <CartProvider>
+          <Slot />
+        </CartProvider>
+      </UserProvider>
+    </SetupProvider></SafeAreaProvider>
   );
 }

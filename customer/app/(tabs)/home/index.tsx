@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "@/FirebaseConfig";
 import { useCart } from "../../context/CartContext";
+import { useUser } from "@/app/context/UserContext";
 
 
 type Product = {
@@ -32,21 +33,10 @@ const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [userName, setUserName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const { items, addItem, total, clearCart } = useCart();
+  const { items, addItem, total } = useCart();
+  const { user } = useUser();
 
-  // fetch user's name from Firestore
-  useEffect(() => {
-    const userId = auth.currentUser?.uid;
-    if (!userId) return;
-    (async () => {
-      try {
-        const userSnap = await getDoc(doc(db, "users", userId));
-        if (userSnap.exists()) setUserName(userSnap.data()?.name ?? null);
-      } catch (error) {
-        console.log("Failed to fetch user: ", error);
-      }
-    })();
-  }, []);
+  
 
   // fetch products
   useEffect(() => {
@@ -78,8 +68,8 @@ const Home = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white p-4">
-      <Text className="text-xl font-bold mb-4">Hi, {userName ?? "there"}!</Text>
+    <SafeAreaView className="flex-1 bg-slate-50 p-4">
+      <Text className="text-xl font-bold mb-4">Hi, {user?.name ?? "there"}!</Text>
       <View className="rounded-3xl h-40 bg-blue-700 mb-4" />
       <Text className="text-2xl font-bold mb-4">Order Water</Text>
       <FlatList

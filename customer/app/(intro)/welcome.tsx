@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 const info = () => {
   const router = useRouter();
   return (
-    <SafeAreaView className="flex-1 bg-white p-10 items-center justify-between">
+    <SafeAreaView className="flex-1 bg-slate-50 p-10 items-center justify-between">
       <Text className="text-5xl font-semibold">
         Home deliveries made easier and more efficient.
       </Text>

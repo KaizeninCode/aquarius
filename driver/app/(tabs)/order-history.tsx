@@ -115,7 +115,7 @@ const OrderHistory = () => {
   // no orders to show
   if (orders.length === 0) {
     return (
-      <View className="flex-1 justify-center items-center p-6 bg-white">
+      <View className="flex-1 justify-center items-center p-6 bg-slate-50">
         <Text className="text-2xl font-bold mb-2">No orders yet</Text>
         <Text className="text-slate-500 text-center mb-6">
           Your past and current orders will show up here.
@@ -125,7 +125,7 @@ const OrderHistory = () => {
     );
   }
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-slate-50">
       
       <FlatList
         data={orders}
@@ -143,8 +143,8 @@ const OrderHistory = () => {
           })
 
           return (
-            <TouchableOpacity className="border border-slate-200 rounded-xl p-4 mb-3" onPress={() => router.push(`/(tabs)/job-screen/delivery-detail?orderId=${item.id}`)}>
-              <View className="flex-row justify-between items-center mb-1">
+            <TouchableOpacity className="border border-slate-200 rounded-xl p-4 mb-3 bg-white" onPress={() => router.push(`/(tabs)/job-screen/delivery-detail?orderId=${item.id}`)}>
+              <View className="flex-row justify-between items-center mb-1 ">
                 <Text className="text-base font-semibold">{item.customerName}</Text>
                 <Text className={`text-sm font-medium ${STATUS_COLORS[item.status]} px-2 py-1 rounded-lg`}>{STATUS_LABELS[item.status]}</Text>
               </View>

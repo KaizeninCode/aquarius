@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 
-const ProfileLayout = () => {
+const SettingsLayout = () => {
   return <Stack screenOptions={{ headerShown: false }} />;
 };
 
-export default ProfileLayout;
+export default SettingsLayout;

@@ -68,7 +68,7 @@ const AddressPicker = () => {
   return (
     
     
-    <SafeAreaView className="bg-white flex-1">
+    <SafeAreaView className="bg-slate-50 flex-1">
       <MapView
         ref={mapRef}
         className="flex-1 bg-slate-100/10"

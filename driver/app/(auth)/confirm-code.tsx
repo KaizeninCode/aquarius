@@ -7,12 +7,14 @@ import {
   collection,
   addDoc,
   serverTimestamp,
+  getDoc,
 } from "firebase/firestore";
 import { db, auth } from "@/firebaseConfig";
 import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { registerPushToken } from "@/utils/registerPushToken";
 import { useSetup } from "@/context/SetupContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const ConfirmCodeScreen = () => {
@@ -32,6 +34,11 @@ const ConfirmCodeScreen = () => {
       const userCredential = await signInWithCredential(auth, credential);
       const userId = userCredential.user.uid;
 
+      const userRef = doc(db, 'users', userId)
+      const existing = await getDoc(userRef)
+
+      if (existing.exists()) return // returning user. skip the firestore rewrite
+
 
       // write user document to firestore
       await setDoc(doc(db, "users", userId), {
@@ -44,6 +51,9 @@ const ConfirmCodeScreen = () => {
         currentLat: null,
         createdAt: serverTimestamp(),
       });
+
+      // set hasSeenIntro flag 
+      await AsyncStorage.setItem("hasSeenIntro", "true");
 
       // register push token
       await registerPushToken(userId)
@@ -58,7 +68,7 @@ const ConfirmCodeScreen = () => {
     }
   };
   return (
-    <SafeAreaView className="flex-1 bg-white justify-center items-center p-5">
+    <SafeAreaView className="flex-1 bg-slate-50 justify-center items-center p-5">
       <View className="rounded-lg p-5 w-full">
         <Text className='text-lg font-semibold mb-5 text-black text-center'>Enter the code sent to your phone</Text>
         <TextInput

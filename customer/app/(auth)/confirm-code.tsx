@@ -8,11 +8,13 @@ import {
   collection,
   addDoc,
   serverTimestamp,
+  getDoc,
 } from "firebase/firestore";
 import { db, auth } from "@/FirebaseConfig";
 import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { registerPushToken } from "@/utils/registerPushToken";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ConfirmCodeScreen = () => {
   const { verificationId } = useLocalSearchParams<{
@@ -30,6 +32,12 @@ const ConfirmCodeScreen = () => {
       const credential = PhoneAuthProvider.credential(verificationId, code);
       const userCredential = await signInWithCredential(auth, credential);
       const userId = userCredential.user.uid;
+
+      const userRef = doc(db, 'users', userId)
+      const existing = await getDoc(userRef)
+
+      if (existing.exists()) return // returning user. skip the firestore rewrite
+
 
       // persist address we collected earlier to the firestore now that we have a uid
       let addressId: string | undefined;
@@ -58,6 +66,8 @@ const ConfirmCodeScreen = () => {
       // register push token
       await registerPushToken(userId)
 
+      await AsyncStorage.setItem('hasSeenIntro','true')
+
       clearSetupData();
 
       // navigate to the home screen
@@ -74,7 +84,7 @@ const ConfirmCodeScreen = () => {
           Enter the code sent to your phone
         </Text>
         <TextInput
-          className="rounded-2xl border border-slate-200 p-3 my-5"
+          className="rounded-2xl border border-slate-200 p-3 mt-5 mb-3"
           placeholder="Enter code"
           placeholderTextColor={"gray"}
           value={code}

@@ -21,20 +21,20 @@ const TabsLayout = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          //   backgroundColor: "#696047",
+            backgroundColor: "#f8fafc",
           // borderColor: '#0a0a0a',
-        //   borderRadius: 40,
+          // borderRadius: 40,
         //   paddingBottom: 30,
           overflow: "hidden",
-        //   marginHorizontal: 20,
-        //   marginBottom: 20,
+          // marginHorizontal: 20,
+          // marginBottom: 20,
         //   height: 60,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           flexDirection: "row",
-          animationName: 'slide'
-        //   position: "absolute",
+          // animationName: 'slide'
+          // position: "absolute",
         },
       }}
     >
@@ -67,9 +67,9 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="settings"
         options={{
-          title: "Profile",
+          title: "You",
           tabBarIcon: ({ focused, size, color }) => (
             <TabIcon
               name={focused ? "person" : "person-outline"}

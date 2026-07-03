@@ -30,20 +30,21 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 justify-center bg-white p-5">
-      <View className="rounded-lg p-5 bg-slate-100/40">
+      <View className="rounded-lg p-5">
         <FirebaseRecaptchaVerifierModal
           ref={recaptchaVerifier}
           firebaseConfig={auth.app.options}
           // className="flex-1 bg-red-300"
         />
 
-        <Text className="text-2xl mb-5 font-semibold">Enter your phone number (start with +254)</Text>
+        <Text className="text-2xl text-center mb-5 font-bold">Log In</Text>
+        <Text className="text-lg mb-3 font-medium">Enter your phone number (start with +254)</Text>
         <TextInput
           placeholder="+254700123456"
           placeholderTextColor={'gray'}
           value={phone}
           onChangeText={setPhone}
-          className="rounded-lg border border-slate-100/50 p-3"
+          className="rounded-lg border border-slate-400/50 p-3"
         />
         <Button title="Send Code" onPress={sendCode} />
       </View>

@@ -18,6 +18,8 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "@/firebaseConfig";
+import { useUser } from "@/context/UserContext";
+
 
 type OrderStatus = "assigned" | "out_for_delivery";
 
@@ -43,24 +45,29 @@ const STATUS_COLORS: Record<OrderStatus, string> = {
 
 const JobScreen = () => {
   const router = useRouter();
-  const [userName, setUserName] = useState<string | null>(null);
+  const {user} = useUser()
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   // fetch user's name from Firestore
-  useEffect(() => {
-    const userId = getAuth().currentUser?.uid;
-    if (!userId) return;
-    (async () => {
-      try {
-        const userSnap = await getDoc(doc(db, "users", userId));
-        if (userSnap.exists()) setUserName(userSnap.data()?.name ?? null);
-      } catch (error) {
-        console.log("Failed to fetch user: ", error);
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   const userId = getAuth().currentUser?.uid;
+  //   if (!userId) return;
+  //   (async () => {
+  //     try {
+  //       const userSnap = await getDoc(doc(db, "users", userId));
+  //       if (userSnap.exists()) {
+  //         setUserName(userSnap.data()?.name ?? null)
+  //         setUserPhone(userSnap.data()?.phone ?? null)
+  //         console.log(userName);
+  //         console.log(userPhone);
+  //       };
+  //     } catch (error) {
+  //       console.log("Failed to fetch user: ", error);
+  //     }
+  //   })();
+  // }, []);
 
   // fetch jobs on mount
   // 1. Check if user is logged in
@@ -104,13 +111,14 @@ const JobScreen = () => {
       </View>
     );
   }
+  // console.log("User: ", user)
 
   // error
   if (error) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-white">
+      <SafeAreaView className="flex-1 justify-center items-center bg-white" edges={['bottom']}>
         <Text className="text-xl font-bold mb-4">
-          Hi, {userName ?? "there"}!
+          Hi, {user?.name ?? "there"}!
         </Text>
         <View className="rounded-3xl h-40 bg-green-700 mb-4" />
         <Text className="text-red-500">{error}</Text>
@@ -121,9 +129,9 @@ const JobScreen = () => {
   // no jobs to show
   if (jobs.length === 0) {
     return (
-      <SafeAreaView className="flex-1 p-6 bg-white">
+      <SafeAreaView className="flex-1 p-6 bg-slate-50">
         <Text className="text-xl font-bold mb-4">
-          Hi, {userName ?? "there"}!
+          Hi, {user?.name ?? "there"}!
         </Text>
         <View className="rounded-3xl h-40 bg-green-700 mb-4" />
         <Text className="text-2xl font-bold mb-2">No deliveries right now</Text>
@@ -135,9 +143,9 @@ const JobScreen = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white p-4">
-      <Text className="text-xl font-bold mb-4">Hi, {userName ?? "there"}!</Text>
-      <View className="rounded-3xl h-40 bg-green-700 mb-4" />
+    <SafeAreaView className="flex-1 bg-slate-50 p-4">
+      <Text className="text-xl font-bold mb-4">Hi, {user?.name ?? "there"}!</Text>
+      <View className="rounded-3xl h-40 bg-green-600 mb-4" />
       <Text className="text-2xl font-bold mb-4">Your Deliveries</Text>
       <FlatList
         data={jobs}

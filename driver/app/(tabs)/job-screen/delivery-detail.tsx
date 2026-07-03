@@ -138,7 +138,7 @@ const DeliveryDetail = () => {
   }
 
   return (
-    <SafeAreaView className='flex-1 bg-white p-4'>
+    <SafeAreaView className='flex-1 bg-slate-50 p-4'>
       <Text className='text-2xl font-bold mb-6'>Delivery Details</Text>
 
       {/* CUSTOMER INFO */}

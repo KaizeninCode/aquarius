@@ -32,7 +32,7 @@ const NameEntry = () => {
   };
   return (
     <KeyboardAvoidingView
-      className="flex-1 p-6 justify-center bg-white"
+      className="flex-1 p-6 justify-center bg-slate-50"
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <Text className="text-2xl font-bold mb-2">What's your name?</Text>

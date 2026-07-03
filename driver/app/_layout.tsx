@@ -8,6 +8,7 @@ import { auth } from "@/firebaseConfig";
 import * as Notifications from 'expo-notifications'
 import { SetupProvider } from "@/context/SetupContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserProvider } from "@/context/UserContext";
 
 type AppState = "loading" | "signedOut" | "main";
 
@@ -22,6 +23,7 @@ export default function RootLayout() {
     const loadIntroFlag = async () => {
       try {
         const seen = await AsyncStorage.getItem("hasSeenIntro");
+        // console.log("Raw AsyncStorage value:", seen) // test log to confirm the existence & state of the flag
         setHasSeenIntro(seen === "true");
       } catch (error) {
         console.warn("Failed to read intro flag", error);
@@ -49,8 +51,9 @@ export default function RootLayout() {
   // redirect based on state, comparing against the current route group
   useEffect(() => {
     if (appState === "loading") return;
+    if (hasSeenIntro === null) return;
     const group = segments[0];
-    // console.log('Redirect check — appState:', appState, 'group:', group, 'segments:', segments)
+    // console.log("Redirect check — appState:", appState, "hasSeenIntro:", hasSeenIntro, "group:", group)
 
     const inIntroGroup = group === "(intro)";
     const inAccountSetupGroup = group === "(account-setup)";
@@ -89,8 +92,10 @@ export default function RootLayout() {
 
   return (
     <SetupProvider>
-      <StatusBar style="dark" />
-      <Slot />
+      <UserProvider>
+        <StatusBar style="dark" />
+        <Slot />
+      </UserProvider>
     </SetupProvider>
   );
 }
