@@ -1,0 +1,38 @@
+name: EAS Build (Android)
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Setup EAS
+        uses: expo/setup-expo-action@v2
+
+      - name: Install dependencies (customer app)
+        working-directory: ./customer
+        run: npm install
+
+      - name: Build APK with EAS
+        working-directory: ./customer
+        env:
+          EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
+        run: eas build --platform android --profile preview --wait
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: ./customer/build-*.apk
+          retention-days: 30

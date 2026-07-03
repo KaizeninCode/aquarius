@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "545829874187",
+    "project_id": "aquarius-3c41b",
+    "storage_bucket": "aquarius-3c41b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545829874187:android:b3a479e5e3c873b9a7350e",
+        "android_client_info": {
+          "package_name": "com.aquarius.customer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVd1DpTAMQzAm5wntkSMgj5osVdZgqF6Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

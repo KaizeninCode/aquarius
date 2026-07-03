@@ -1,6 +1,6 @@
 import { View, Text, Linking, ActivityIndicator, TouchableOpacity, Alert } from 'react-native'
 import React, {useState, useEffect} from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { doc, onSnapshot, updateDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '@/firebaseConfig'
@@ -122,7 +122,7 @@ const DeliveryDetail = () => {
   // loading state
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <ActivityIndicator size="large" />
       </View>
     );
@@ -131,14 +131,14 @@ const DeliveryDetail = () => {
   // error
   if (error || !job) {
     return (
-      <View className="flex-1 justify-center items-center p-6">
+      <View className="flex-1 justify-center items-center p-6" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <Text className="text-red-500">{error || "Something went wrong."}</Text>
       </View>
     );
   }
 
   return (
-    <SafeAreaView className='flex-1 bg-slate-50 p-4'>
+    <SafeAreaView className='flex-1 bg-slate-50 p-4' style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <Text className='text-2xl font-bold mb-6'>Delivery Details</Text>
 
       {/* CUSTOMER INFO */}

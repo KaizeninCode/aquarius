@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 const PrivacyPolicyScreen = () => {
   const sections = [
@@ -34,7 +34,7 @@ const PrivacyPolicyScreen = () => {
     },
   ];
   return (
-    <SafeAreaView className="flex-1 bg-white p-6">
+    <SafeAreaView className="flex-1 bg-white p-6" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <ScrollView>
         <Text className="text-2xl font-bold mb-2">Privacy Policy</Text>
         <Text className="text-slate-500 text-sm mb-8">

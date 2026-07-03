@@ -1,12 +1,12 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
 const info = () => {
   const router = useRouter();
   return (
-    <SafeAreaView className="flex-1 bg-white p-10 items-center justify-between">
+    <SafeAreaView className="flex-1 bg-white p-10 items-center justify-between" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <Text className="text-5xl font-semibold">
         Making home deliveries easier.
       </Text>

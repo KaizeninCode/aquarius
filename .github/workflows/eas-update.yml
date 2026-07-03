@@ -1,0 +1,34 @@
+name: EAS Update (OTA)
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Setup EAS
+        uses: expo/setup-expo-action@v2
+
+      - name: Install dependencies (customer app)
+        working-directory: ./customer
+        run: npm install
+
+      - name: Deploy OTA update
+        working-directory: ./customer
+        env:
+          EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
+        run: eas update --auto
+
+      - name: Log update summary
+        run: echo "OTA update deployed to preview channel"

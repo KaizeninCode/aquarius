@@ -3,7 +3,7 @@ import { View, TextInput, Button, Text } from "react-native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { PhoneAuthProvider } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
 const LoginScreen = () => {
@@ -29,7 +29,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 justify-center bg-slate-50 p-5">
+    <SafeAreaView className="flex-1 justify-center bg-slate-50 p-5" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <View className="rounded-lg p-5 bg-slate-100/40">
         <FirebaseRecaptchaVerifierModal
           ref={recaptchaVerifier}

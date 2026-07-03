@@ -15,9 +15,9 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { db } from "@/FirebaseConfig";
+import { firestore, auth } from "@/FirebaseConfig";
 import { useCart } from "@/app/context/CartContext";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Address = {
   id: string;
@@ -40,7 +40,7 @@ const CheckoutPage = () => {
         const userId = getAuth().currentUser?.uid;
         if (!userId) return;
 
-        const userSnap = await getDoc(doc(db, "users", userId));
+        const userSnap = await firestore().collection('users').doc(userId).get();
         const defaultAddressId = userSnap.data()?.defaultAddressId;
 
         if (!defaultAddressId) {
@@ -48,9 +48,7 @@ const CheckoutPage = () => {
           return;
         }
 
-        const addressSnap = await getDoc(
-          doc(db, "addresses", defaultAddressId),
-        );
+        const addressSnap = await firestore().collection('addresses').doc(defaultAddressId).get()
         if (addressSnap.exists())
           setAddress({ id: addressSnap.id, ...addressSnap.data() } as Address);
       } catch (error) {
@@ -79,11 +77,11 @@ const CheckoutPage = () => {
     setPlacingOrder(true);
 
     try {
-      const userSnap = await getDoc(doc(db, "users", userId));
+      const userSnap = await firestore().collection('users').doc(userId).get();
       const customerName = userSnap.data()?.name ?? "Unknown";
       const customerPhone = auth.currentUser?.phoneNumber ?? "";
 
-      const orderRef = await addDoc(collection(db, "orders"), {
+      const orderRef = await firestore().collection('orders').add({
         customerId: userId,
         customerName,
         customerPhone,
@@ -108,8 +106,8 @@ const CheckoutPage = () => {
         totalAmount: total,
 
         status: "placed",
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt: firestore.FieldValue.serverTimestamp(),
+        updatedAt: firestore.FieldValue.serverTimestamp(),
       });
 
       clearCart();
@@ -125,13 +123,13 @@ const CheckoutPage = () => {
 
   if (loadingAddress) {
     return (
-      <View className="flex-1 items-center justify-center">
+      <View className="flex-1 items-center justify-center" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <ActivityIndicator size={"large"} />
       </View>
     );
   }
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 p-4">
+    <SafeAreaView className="flex-1 bg-slate-50 p-4" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <Text className="text-2xl font-bold mb-4">Checkout</Text>
 
       {/* delivery address section */}

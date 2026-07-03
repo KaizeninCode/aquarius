@@ -4,7 +4,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Octicons from "@expo/vector-icons/Octicons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import ProfileHeader from "./components/ProfileHeader";
 import SettingsItem from "./components/SettingsItem";
 import SettingsSection from "./components/SettingsSection";
@@ -100,7 +100,7 @@ const SettingsScreen = () => {
   const handleOnPress = (onPress: void) => router.push('/')
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 p-4">
+    <SafeAreaView className="flex-1 bg-slate-50 p-4" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <ScrollView
         contentContainerStyle={{ paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}

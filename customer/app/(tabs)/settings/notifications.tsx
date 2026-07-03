@@ -7,12 +7,12 @@ import {
   ActivityIndicator,
   Switch,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { doc, updateDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { db } from "@/FirebaseConfig";
+import { firestore, auth } from "@/FirebaseConfig";
 import { registerPushToken } from "@/utils/registerPushToken";
 
 type PermissionState = "loading" | "unavailable" | "granted" | "denied" | "undetermined";
@@ -80,7 +80,7 @@ export default function NotificationsScreen() {
     if (!userId) return;
     try {
       // Remove token from Firestore — Cloud Function won't find a token to send to
-      await updateDoc(doc(db, "users", userId), { pushToken: null });
+      await firestore().collection('users').doc(userId).update( { pushToken: null });
       // Note: we don't revoke the OS-level permission since that requires device settings.
       // Clearing the token is sufficient — no token = no notifications from our system.
       setPermissionState("denied");
@@ -95,14 +95,14 @@ export default function NotificationsScreen() {
 
   if (permissionState === "loading") {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <View className="p-6 flex-1">
         <Text className="text-2xl font-bold mb-2">Notifications</Text>
         <Text className="text-slate-500 text-sm mb-8">

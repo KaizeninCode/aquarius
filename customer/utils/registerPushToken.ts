@@ -2,7 +2,7 @@ import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
 import { Platform } from 'react-native'
 import { doc, updateDoc } from 'firebase/firestore'
-import { db } from '@/FirebaseConfig'
+import { firestore, auth } from '@/FirebaseConfig'
 
 export async function registerPushToken(userId: string) {
     // push tokens only work on real devices, not emulators
@@ -34,6 +34,8 @@ export async function registerPushToken(userId: string) {
 
     // get the token and save it the firestore
     const token = (await Notifications.getExpoPushTokenAsync()).data
-    await updateDoc(doc(db, 'users', userId), {pushToken: token})
+    const uid = userId ?? auth().currentUser?.uid
+    await firestore().collection('users').doc(uid).update({pushToken: token})
     console.log('Push token saved: ', token)
 }
+// ========== BUILD COMMAND IS FAILING AFTER REFACTORING FROM FIREBASE SDK TO RNF ==========

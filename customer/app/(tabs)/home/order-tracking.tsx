@@ -2,8 +2,8 @@ import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "@/FirebaseConfig";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { firestore, auth } from "@/FirebaseConfig";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 type OrderStatus =
   | "placed"
@@ -43,8 +43,7 @@ const OrderTrackingScreen = () => {
       return;
     }
 
-    const unsubscribe = onSnapshot(
-      doc(db, "orders", orderId),
+    const unsubscribe = firestore().collection('orders').doc(orderId).onSnapshot(
       (snap) => {
         if (!snap.exists()) {
           setError("Order not found.");
@@ -56,7 +55,7 @@ const OrderTrackingScreen = () => {
 
         setLoading(false);
       },
-      (err) => {
+      (error) => {
         console.error("Failed to listen to order: ", error);
         setError("Could not load order status.");
         setLoading(false);
@@ -68,7 +67,7 @@ const OrderTrackingScreen = () => {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <ActivityIndicator size={"large"} />
       </View>
     );
@@ -76,7 +75,7 @@ const OrderTrackingScreen = () => {
 
   if (error || !order) {
     return (
-      <View className="flex-1 items-center justify-center p-6">
+      <View className="flex-1 items-center justify-center p-6" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <Text className="text-lg text-red-500 mb-4">
           {error || "Something went wrong."}
         </Text>
@@ -89,7 +88,7 @@ const OrderTrackingScreen = () => {
 
   if (order.status === "cancelled") {
     return (
-      <View className="flex-1 justify-center items-center p-6">
+      <View className="flex-1 justify-center items-center p-6" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <Text className="text-2xl font-bold mb-2">Order Cancelled</Text>
         <Text className="text-slate-500 text-center mb-6">
           This order was cancelled. Contact the shop if you have questions.
@@ -106,7 +105,7 @@ const OrderTrackingScreen = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-white p-4">
+    <SafeAreaView className="flex-1 bg-white p-4" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <Text className="text-2xl font-bold mb-6">Order Status</Text>
       {/* STATUS TIMELINE */}
       <View className="mb-6">

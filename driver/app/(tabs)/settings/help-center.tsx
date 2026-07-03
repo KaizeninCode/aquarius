@@ -1,7 +1,7 @@
 // app/(tabs)/settings/help-center.tsx
 import React from "react";
 import { ScrollView, Text, View, TouchableOpacity, Linking } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 const faqs = [
   {
@@ -38,7 +38,7 @@ export default function HelpCenterScreen() {
     Linking.openURL(`https://wa.me/${CONTACT_PHONE.replace("+", "")}`);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <ScrollView contentContainerStyle={{ padding: 24 }}>
         <Text className="text-2xl font-bold mb-2">Help Center</Text>
         <Text className="text-slate-500 text-sm mb-8">

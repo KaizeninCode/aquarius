@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   Switch,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { doc, updateDoc } from "firebase/firestore";
@@ -102,7 +102,7 @@ export default function NotificationsScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <View className="p-6 flex-1">
         <Text className="text-2xl font-bold mb-2">Notifications</Text>
         <Text className="text-slate-500 text-sm mb-8">

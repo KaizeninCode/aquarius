@@ -7,7 +7,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   collection,
   query,
@@ -19,7 +19,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useRouter } from "expo-router";
-import { db } from "@/FirebaseConfig";
+import { firestore, auth } from "@/FirebaseConfig";
 import { useUser } from "../../context/UserContext";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -44,24 +44,21 @@ export default function SavedAddressesScreen() {
   useEffect(() => {
     if (!userId) return;
 
-    const q = query(
-      collection(db, "addresses"),
-      where("userId", "==", userId)
-    );
-
-    const unsubscribe = onSnapshot(
-      q,
-      (snap) => {
-        setAddresses(
-          snap.docs.map((d) => ({ id: d.id, ...d.data() } as Address))
-        );
-        setLoading(false);
-      },
-      (err) => {
-        console.error("Failed to load addresses:", err);
-        setLoading(false);
-      }
-    );
+    const unsubscribe = firestore()
+      .collection("addresses")
+      .where("userId", "==", userId)
+      .onSnapshot(
+        (snap) => {
+          setAddresses(
+            snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Address),
+          );
+          setLoading(false);
+        },
+        (err) => {
+          console.error("Failed to load addresses:", err);
+          setLoading(false);
+        },
+      );
 
     return unsubscribe;
   }, [userId]);
@@ -70,7 +67,7 @@ export default function SavedAddressesScreen() {
     if (!userId || addressId === user?.defaultAddressId) return;
     setUpdating(addressId);
     try {
-      await updateDoc(doc(db, "users", userId), {
+      await firestore().collection('addresses').doc(userId).update({
         defaultAddressId: addressId,
       });
     } catch (err) {
@@ -85,45 +82,41 @@ export default function SavedAddressesScreen() {
     if (address.id === user?.defaultAddressId) {
       Alert.alert(
         "Can't delete default address",
-        "Set another address as default before deleting this one."
+        "Set another address as default before deleting this one.",
       );
       return;
     }
 
-    Alert.alert(
-      "Delete address",
-      `Remove "${address.label}"?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            setUpdating(address.id);
-            try {
-              await deleteDoc(doc(db, "addresses", address.id));
-            } catch (err) {
-              console.error("Failed to delete address:", err);
-              Alert.alert("Error", "Could not delete address.");
-            } finally {
-              setUpdating(null);
-            }
-          },
+    Alert.alert("Delete address", `Remove "${address.label}"?`, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          setUpdating(address.id);
+          try {
+            await firestore().collection('addresses').doc(address.id).delete();
+          } catch (err) {
+            console.error("Failed to delete address:", err);
+            Alert.alert("Error", "Could not delete address.");
+          } finally {
+            setUpdating(null);
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <FlatList
         data={addresses}
         keyExtractor={(item) => item.id}

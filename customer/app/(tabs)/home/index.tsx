@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import {
   collection,
@@ -16,7 +16,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db, auth } from "@/FirebaseConfig";
+import { firestore, auth } from "@/FirebaseConfig";
 import { useCart } from "../../context/CartContext";
 import { useUser } from "@/app/context/UserContext";
 
@@ -40,23 +40,23 @@ const Home = () => {
 
   // fetch products
   useEffect(() => {
-    (async () => {
-      try {
-        const q = query(
-          collection(db, "products"),
-          where("isActive", "==", true),
-        );
-        const snap = await getDocs(q);
-        setProducts(
-          snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Product),
-        );
-      } catch (error) {
-        console.error("Failed to load products: ", error);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    const unsubscribe = firestore()
+      .collection('products')
+      .where('isActive', '==', true)
+      .onSnapshot(
+        snap => {
+          setProducts(snap.docs.map(d=>({id:d.id, ...d.data()}  as Product )))
+          setLoading(false)
+        },
+        error => {
+          console.error('Failed to load products: ', error)
+          setLoading(false)
+        },
+      )
+      return unsubscribe
   }, []);
+
+  const insets = useSafeAreaInsets()
 
   {
     if (loading)
@@ -68,7 +68,7 @@ const Home = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 p-4">
+    <SafeAreaView className="flex-1 bg-slate-50 p-4" style={{paddingBottom: insets.bottom}}>
       <Text className="text-xl font-bold mb-4">Hi, {user?.name ?? "there"}!</Text>
       <View className="rounded-3xl h-40 bg-blue-700 mb-4" />
       <Text className="text-2xl font-bold mb-4">Order Water</Text>

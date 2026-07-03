@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Button } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   doc,
   setDoc,
@@ -68,7 +68,7 @@ const ConfirmCodeScreen = () => {
     }
   };
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 justify-center items-center p-5">
+    <SafeAreaView className="flex-1 bg-slate-50 justify-center items-center p-5" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <View className="rounded-lg p-5 w-full">
         <Text className='text-lg font-semibold mb-5 text-black text-center'>Enter the code sent to your phone</Text>
         <TextInput

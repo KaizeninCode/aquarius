@@ -6,7 +6,7 @@ import {
   FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import {
   collection,
@@ -97,7 +97,7 @@ const OrderHistory = () => {
   // loading state
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center bg-white">
+      <View className="flex-1 justify-center items-center bg-white" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <ActivityIndicator size={"large"} />
       </View>
     );
@@ -106,7 +106,7 @@ const OrderHistory = () => {
   // error
   if (error) {
     return (
-      <View className="flex-1 justify-center items-center bg-white">
+      <View className="flex-1 justify-center items-center bg-white" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <Text className="text-red-500">{error}</Text>
       </View>
     );
@@ -115,7 +115,7 @@ const OrderHistory = () => {
   // no orders to show
   if (orders.length === 0) {
     return (
-      <View className="flex-1 justify-center items-center p-6 bg-slate-50">
+      <View className="flex-1 justify-center items-center p-6 bg-slate-50" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <Text className="text-2xl font-bold mb-2">No orders yet</Text>
         <Text className="text-slate-500 text-center mb-6">
           Your past and current orders will show up here.
@@ -125,7 +125,7 @@ const OrderHistory = () => {
     );
   }
   return (
-    <SafeAreaView className="flex-1 bg-slate-50">
+    <SafeAreaView className="flex-1 bg-slate-50" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       
       <FlatList
         data={orders}

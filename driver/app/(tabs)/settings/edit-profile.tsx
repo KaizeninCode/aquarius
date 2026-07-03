@@ -1,6 +1,6 @@
 import { View, Text,TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import React, {useState, useEffect} from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { doc, updateDoc } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { db } from '@/firebaseConfig'
@@ -52,14 +52,14 @@ const EditProfileScreen = () => {
 
     if (loading) {
     return (
-      <View className="flex-1 justify-center items-center bg-sate-50">
+      <View className="flex-1 justify-center items-center bg-sate-50" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
   return (
-    <SafeAreaView className='flex-1 bg-slate-50 p-4'>
+    <SafeAreaView className='flex-1 bg-slate-50 p-4' style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <View className="p-6 flex-1">
         <Text className="text-2xl font-bold mb-2">Edit Profile</Text>
         <Text className="text-slate-500 text-sm mb-8">

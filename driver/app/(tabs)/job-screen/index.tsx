@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import {
   collection,
@@ -116,7 +116,7 @@ const JobScreen = () => {
   // error
   if (error) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-white" edges={['bottom']}>
+      <SafeAreaView className="flex-1 justify-center items-center bg-white" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <Text className="text-xl font-bold mb-4">
           Hi, {user?.name ?? "there"}!
         </Text>
@@ -129,7 +129,7 @@ const JobScreen = () => {
   // no jobs to show
   if (jobs.length === 0) {
     return (
-      <SafeAreaView className="flex-1 p-6 bg-slate-50">
+      <SafeAreaView className="flex-1 p-6 bg-slate-50" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <Text className="text-xl font-bold mb-4">
           Hi, {user?.name ?? "there"}!
         </Text>
@@ -143,7 +143,7 @@ const JobScreen = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 p-4">
+    <SafeAreaView className="flex-1 bg-slate-50 p-4" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <Text className="text-xl font-bold mb-4">Hi, {user?.name ?? "there"}!</Text>
       <View className="rounded-3xl h-40 bg-green-600 mb-4" />
       <Text className="text-2xl font-bold mb-4">Your Deliveries</Text>

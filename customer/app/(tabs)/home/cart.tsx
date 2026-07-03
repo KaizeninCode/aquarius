@@ -1,6 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useCart } from "@/app/context/CartContext";
 
@@ -10,7 +10,7 @@ const CartPage = () => {
 
   if (items.length == 0) {
     return (
-      <View className="flex-1 justify-center items-center p-6 bg-slate-50">
+      <View className="flex-1 justify-center items-center p-6 bg-slate-50" style={{paddingBottom: useSafeAreaInsets().bottom}}>
         <Text className="text-2xl font-bold mb-2">Your cart is empty</Text>
         <Text className="text-slate-500 text-center mb-6">
           Add some water bottles from the home screen
@@ -27,7 +27,7 @@ const CartPage = () => {
     );
   }
   return (
-    <SafeAreaView className="flex-1 bg-slate-50">
+    <SafeAreaView className="flex-1 bg-slate-50" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       {/* item list */}
       <FlatList
         data={items}

@@ -37,7 +37,7 @@ export default function RootLayout() {
 
   // listen for auth state. This determines what the user will be shown
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+    const unsubscribe = auth().onAuthStateChanged( (user) => {
       // console.log("===== AUTH CHANGED =====");
       // console.log("User:", user);
       // console.log("UID:", user?.uid);
