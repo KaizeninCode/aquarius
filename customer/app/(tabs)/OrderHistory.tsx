@@ -152,7 +152,7 @@ const OrderHistory = () => {
 
           return (
             <TouchableOpacity
-              className="border border-slate-200 rounded-xl p-4 mb-3"
+              className="shadow-sm shadow-black border-slate-200 rounded-xl p-4 mb-3"
               onPress={() =>
                 router.push(`/(tabs)/home/order-tracking?orderId=${item.id}`)
               }

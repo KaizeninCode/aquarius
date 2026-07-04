@@ -236,7 +236,7 @@ const DeliveryDetail = () => {
 
       {/* back button */}
       <TouchableOpacity
-        className="bg-blue-500 p-3 rounded-xl items-center mt-auto w-3/5 mx-auto"
+        className="bg-blue-500 p-3 rounded-xl items-center mt-10 w-3/5 mx-auto"
         onPress={() => router.back()}
       >
         <Text className="text-white font-semibold">Back to orders</Text>

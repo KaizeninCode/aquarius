@@ -62,7 +62,11 @@ const Home = () => {
   return (
     <SafeAreaView className="flex-1 bg-slate-50 p-4" style={{paddingBottom: insets.bottom}}>
       <Text className="text-xl font-bold mb-4">Hi, {user?.name ?? "there"}!</Text>
-      <View className="rounded-3xl h-40 bg-blue-700 mb-4" />
+      <View className="rounded-3xl h-40 bg-blue-700 mb-4 p-6">
+        <Text className="text-4xl text-white uppercase font-bold mb-3">Shop Name</Text>
+        <Text className="text-2xl text-white mb-3">Imaginary Shop Holdings</Text>
+        <Text className="text-lg text-white ">Imaginary Location</Text>
+      </View>
       <Text className="text-2xl font-bold mb-4">Order Water</Text>
       <FlatList
         data={products}

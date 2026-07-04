@@ -131,7 +131,7 @@ const OrderHistory = () => {
           })
 
           return (
-            <TouchableOpacity className="border border-slate-200 rounded-xl p-4 mb-3 bg-white" onPress={() => router.push(`/(tabs)/job-screen/delivery-detail?orderId=${item.id}`)}>
+            <TouchableOpacity className="shadow-sm shadow-black border-slate-200 rounded-xl p-4 mb-3 bg-white" onPress={() => router.push(`/(tabs)/job-screen/delivery-detail?orderId=${item.id}`)}>
               <View className="flex-row justify-between items-center mb-1 ">
                 <Text className="text-base font-semibold">{item.customerName}</Text>
                 <Text className={`text-sm font-medium ${STATUS_COLORS[item.status]} px-2 py-1 rounded-lg`}>{STATUS_LABELS[item.status]}</Text>

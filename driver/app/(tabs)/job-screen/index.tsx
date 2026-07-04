@@ -43,24 +43,6 @@ const JobScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // fetch user's name from Firestore
-  // useEffect(() => {
-  //   const userId = getAuth().currentUser?.uid;
-  //   if (!userId) return;
-  //   (async () => {
-  //     try {
-  //       const userSnap = await getDoc(doc(db, "users", userId));
-  //       if (userSnap.exists()) {
-  //         setUserName(userSnap.data()?.name ?? null)
-  //         setUserPhone(userSnap.data()?.phone ?? null)
-  //         console.log(userName);
-  //         console.log(userPhone);
-  //       };
-  //     } catch (error) {
-  //       console.log("Failed to fetch user: ", error);
-  //     }
-  //   })();
-  // }, []);
 
   // fetch jobs on mount
   // 1. Check if user is logged in
@@ -146,7 +128,11 @@ const JobScreen = () => {
       <Text className="text-xl font-bold mb-4">
         Hi, {user?.name ?? "there"}!
       </Text>
-      <View className="rounded-3xl h-40 bg-green-600 mb-4" />
+      <View className="rounded-3xl h-40 bg-green-600 mb-4 p-6">
+        <Text className="text-4xl text-white uppercase font-bold mb-3">Shop Name</Text>
+        <Text className="text-2xl text-white mb-3">Imaginary Shop Holdings</Text>
+        <Text className="text-lg text-white ">Imaginary Location</Text>
+      </View>
       <Text className="text-2xl font-bold mb-4">Your Deliveries</Text>
       <FlatList
         data={jobs}
@@ -159,7 +145,7 @@ const JobScreen = () => {
 
           return (
             <TouchableOpacity
-              className="border border-slate-200 rounded-xl p-4 mb-3"
+              className="shadow-sm shadow-black border-slate-200 rounded-xl p-4 mb-3 bg-white"
               onPress={() =>
                 router.push({
                   pathname: "/(tabs)/job-screen/delivery-detail",
