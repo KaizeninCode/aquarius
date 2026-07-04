@@ -95,6 +95,7 @@ const ConfirmCodeScreen = () => {
           placeholderTextColor={"gray"}
           value={code}
           onChangeText={setCode}
+          keyboardType="phone-pad"
         />
 
         {error && <Text className="font-red-500 mb-2.5">{error}</Text>}

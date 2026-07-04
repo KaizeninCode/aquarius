@@ -47,7 +47,7 @@ const LoginScreen = () => {
         /> */}
 
         <Text className="text-2xl text-center mb-5 font-bold">Log In</Text>
-        <Text className="text-lg mb-3 font-medium">Enter your phone number (start with +254). We'll send you a verification code.</Text>
+        <Text className="text-lg mb-3 font-base">Enter your phone number (start with +254). We'll send you a verification code.</Text>
         <TextInput
           placeholder="+254700123456"
           placeholderTextColor={'gray'}
@@ -57,7 +57,7 @@ const LoginScreen = () => {
           keyboardType="phone-pad"
         />
         <TouchableOpacity
-        className={`py-4 rounded-2xl items-center ${sending ? "bg-slate-200" : "bg-blue-500"}`}
+        className={`py-4 mt-5 rounded-2xl items-center ${sending ? "bg-slate-200" : "bg-blue-500"}`}
         onPress={sendCode}
         disabled={sending}
       >
