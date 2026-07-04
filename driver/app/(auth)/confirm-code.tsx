@@ -1,21 +1,11 @@
-import { View, Text, TextInput, Button } from "react-native";
+import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  doc,
-  setDoc,
-  collection,
-  addDoc,
-  serverTimestamp,
-  getDoc,
-} from "firebase/firestore";
-import { db, auth } from "@/firebaseConfig";
-import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
+import { useSetup } from "../../context/SetupContext";
+import { firestore, auth } from "@/firebaseConfig";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { registerPushToken } from "@/utils/registerPushToken";
-import { useSetup } from "@/context/SetupContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 const ConfirmCodeScreen = () => {
   const { verificationId } = useLocalSearchParams<{
@@ -23,40 +13,64 @@ const ConfirmCodeScreen = () => {
     phone: string;
   }>();
   const [code, setCode] = useState("");
+  const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-  const {setupData, clearSetupData} = useSetup()
+  const { setupData, clearSetupData } = useSetup();
 
   const confirmCode = async () => {
+    if (!code.trim()) {
+      setError("Please enter the code.");
+      return;
+    }
+
+    setConfirming(true);
+    setError("");
+
     try {
-      // sign the user in using a credential
-      const credential = PhoneAuthProvider.credential(verificationId, code);
-      const userCredential = await signInWithCredential(auth, credential);
+      // confirm the code with RNF
+      const credential = auth.PhoneAuthProvider.credential(
+        verificationId,
+        code,
+      );
+      const userCredential = await auth().signInWithCredential(credential);
       const userId = userCredential.user.uid;
 
-      const userRef = doc(db, 'users', userId)
-      const existing = await getDoc(userRef)
+      const userRef = await firestore().collection("users").doc(userId).get();
+      if (userRef.exists()) return; // returning user. skip the firestore rewrite
+      
 
-      if (existing.exists()) return // returning user. skip the firestore rewrite
-
+      // persist address we collected earlier to the firestore now that we have a uid
+      let addressId: string | undefined;
+      if (setupData.address) {
+        const addressRef = await firestore().collection("addresses").add({
+          userId,
+          label: setupData.address.label,
+          lat: setupData.address.lat,
+          lng: setupData.address.lng,
+          notes: setupData.address.notes,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+        });
+        addressId = addressRef.id;
+      }
 
       // write user document to firestore
-      await setDoc(doc(db, "users", userId), {
-        name: setupData.name,
-        phone: userCredential.user.phoneNumber,
-        role: "driver",
-        isAvailable: false,
-        onboardingComplete: true,
-        currentLng: null,
-        currentLat: null,
-        createdAt: serverTimestamp(),
-      });
-
-      // set hasSeenIntro flag 
-      await AsyncStorage.setItem("hasSeenIntro", "true");
+      await firestore()
+        .collection("users")
+        .doc(userId)
+        .set({
+          name: setupData.name,
+          phone: userCredential.user.phoneNumber,
+          role: "customer",
+          onboardingComplete: true,
+          defaultAddressId: addressId ?? null,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+        });
 
       // register push token
-      await registerPushToken(userId)
+      await registerPushToken(userId);
+
+      await AsyncStorage.setItem("hasSeenIntro", "true");
 
       clearSetupData();
 
@@ -67,21 +81,36 @@ const ConfirmCodeScreen = () => {
       setError("Invalid code. Please try again.");
     }
   };
+
+  const insets = useSafeAreaInsets()
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 justify-center items-center p-5" style={{paddingBottom: useSafeAreaInsets().bottom}}>
+    <SafeAreaView className="flex-1 bg-white justify-center items-center p-5" style={{paddingBottom: insets.bottom}}>
       <View className="rounded-lg p-5 w-full">
-        <Text className='text-lg font-semibold mb-5 text-black text-center'>Enter the code sent to your phone</Text>
+        <Text className="text-lg font-semibold text-black text-center">
+          Enter the code sent to your phone
+        </Text>
         <TextInput
-          className="rounded-lg border border-slate-300 p-3 mb-6"
+          className="rounded-2xl border border-slate-200 p-3 mt-5 mb-3"
           placeholder="Enter code"
-          placeholderTextColor={'gray'}
+          placeholderTextColor={"gray"}
           value={code}
           onChangeText={setCode}
+          keyboardType="phone-pad"
         />
 
-        {error && <Text className="font-red-500 my-2.5">{error}</Text>}
+        {error && <Text className="font-red-500 mb-2.5">{error}</Text>}
 
-        <Button title="Confirm" onPress={confirmCode} />
+        <TouchableOpacity
+          className={`py-4 rounded-2xl items-center ${confirming ? "bg-slate-200" : "bg-blue-500"}`}
+          onPress={confirmCode}
+          disabled={confirming}
+        >
+          <Text
+            className={`font-bold text-base ${confirming ? "text-slate-400" : "text-white"}`}
+          >
+            {confirming ? "Verifying..." : "Verify"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

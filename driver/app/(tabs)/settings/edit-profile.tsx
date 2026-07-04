@@ -1,9 +1,7 @@
 import { View, Text,TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import React, {useState, useEffect} from 'react'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
-import { doc, updateDoc } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
-import { db } from '@/firebaseConfig'
+import { firestore, auth } from '@/firebaseConfig'
 import { useUser } from '@/context/UserContext'
 
 
@@ -29,7 +27,7 @@ const EditProfileScreen = () => {
 
         if (isDirty) return
 
-        const userId = getAuth().currentUser?.uid
+        const userId = auth().currentUser?.uid
         if (!userId) {
             Alert.alert('Session expired. Please log in again.')
             return
@@ -38,7 +36,7 @@ const EditProfileScreen = () => {
         setSaving(true)
         setError('')
         try {
-            await updateDoc(doc(db, 'users', userId), {
+            await firestore().collection('users').doc(userId).update({
                 name: name.trim()
             })
             Alert.alert('Saved','Your name has been updated.')

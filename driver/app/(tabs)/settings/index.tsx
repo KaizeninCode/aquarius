@@ -8,9 +8,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import ProfileHeader from "./components/ProfileHeader";
 import SettingsItem from "./components/SettingsItem";
 import SettingsSection from "./components/SettingsSection";
-import { getAuth, signOut } from "firebase/auth";
-import { auth, db } from "@/firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import { auth, firestore } from "@/firebaseConfig";
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "expo-router";
 
@@ -88,7 +86,7 @@ const SettingsScreen = () => {
                 color="#ef4444"
               />
             ),
-            onPress: () => signOut(auth),
+            onPress: () => auth().signOut(),
             danger: true,
           },
         ],

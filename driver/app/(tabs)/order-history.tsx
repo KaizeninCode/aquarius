@@ -8,15 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  onSnapshot,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { db } from "@/firebaseConfig";
+import { firestore, auth } from "@/firebaseConfig";
 
 type OrderStatus =
   | "placed"
@@ -61,21 +53,17 @@ const OrderHistory = () => {
 
   // fetch orders from firestore
   useEffect(() => {
-    const userId = getAuth().currentUser?.uid;
+    const userId = auth().currentUser?.uid;
     if (!userId) {
       setError("Not logged in. Please log in again.");
       setLoading(false);
       return;
-    }
+    }    
 
-    const q = query(
-      collection(db, "orders"),
-      where("driverId", "==", userId),
-      orderBy("createdAt", "desc"),
-    );
-
-    const unsubscribe = onSnapshot(
-      q,
+    const unsubscribe = firestore().
+      collection("orders").
+      where("driverId", "==", userId).
+      orderBy("createdAt", "desc").onSnapshot(
       (snap) => {
         setOrders(
           snap.docs.map(

@@ -3,8 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import "../global.css";
 import React, { useState, useEffect } from "react";
 import { View, ActivityIndicator } from "react-native";
-import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "@/firebaseConfig";
+import { auth, firestore } from "@/firebaseConfig";
 import * as Notifications from 'expo-notifications'
 import { SetupProvider } from "@/context/SetupContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -37,7 +36,7 @@ export default function RootLayout() {
 
   // listen for auth state. This determines what the user will be shown
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+    const unsubscribe = auth().onAuthStateChanged((user:any) => {
       // console.log("===== AUTH CHANGED =====");
       // console.log("User:", user);
       // console.log("UID:", user?.uid);

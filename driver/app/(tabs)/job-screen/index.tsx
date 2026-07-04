@@ -6,20 +6,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
 import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  getDoc,
-  doc,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { db } from "@/firebaseConfig";
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import { firestore, auth } from "@/firebaseConfig";
 import { useUser } from "@/context/UserContext";
-
 
 type OrderStatus = "assigned" | "out_for_delivery";
 
@@ -45,7 +38,7 @@ const STATUS_COLORS: Record<OrderStatus, string> = {
 
 const JobScreen = () => {
   const router = useRouter();
-  const {user} = useUser()
+  const { user } = useUser();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -72,7 +65,7 @@ const JobScreen = () => {
   // fetch jobs on mount
   // 1. Check if user is logged in
   useEffect(() => {
-    const userId = getAuth().currentUser?.uid;
+    const userId = auth().currentUser?.uid;
     // console.log(userId)
     if (!userId) {
       setError("Not logged in. Please log in again.");
@@ -81,24 +74,21 @@ const JobScreen = () => {
     }
 
     // 2. fetch jobs from firestore
-    const q = query(
-      collection(db, "orders"),
-      where("driverId", "==", userId),
-      where("status", "in", ["assigned", "out_for_delivery"]),
-    );
-
-    const unsubscribe = onSnapshot(
-      q,
-      (snap) => {
-        setJobs(snap.docs.map((s) => ({ id: s.id, ...s.data() }) as Job));
-        setLoading(false);
-      },
-      (error) => {
-        console.error("Failed to load jobs: ", error);
-        setError("Could not load jobs. Try again.");
-        setLoading(false);
-      },
-    );
+    const unsubscribe = firestore()
+      .collection("orders")
+      .where("driverId", "==", userId)
+      .orderBy("createdAt", "desc")
+      .onSnapshot(
+        (snap) => {
+          setJobs(snap.docs.map((s) => ({ id: s.id, ...s.data() }) as Job));
+          setLoading(false);
+        },
+        (error) => {
+          console.error("Failed to load jobs: ", error);
+          setError("Could not load jobs. Try again.");
+          setLoading(false);
+        },
+      );
 
     return unsubscribe;
   }, []);
@@ -116,7 +106,10 @@ const JobScreen = () => {
   // error
   if (error) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-white" style={{paddingBottom: useSafeAreaInsets().bottom}}>
+      <SafeAreaView
+        className="flex-1 justify-center items-center bg-white"
+        style={{ paddingBottom: useSafeAreaInsets().bottom }}
+      >
         <Text className="text-xl font-bold mb-4">
           Hi, {user?.name ?? "there"}!
         </Text>
@@ -129,7 +122,10 @@ const JobScreen = () => {
   // no jobs to show
   if (jobs.length === 0) {
     return (
-      <SafeAreaView className="flex-1 p-6 bg-slate-50" style={{paddingBottom: useSafeAreaInsets().bottom}}>
+      <SafeAreaView
+        className="flex-1 p-6 bg-slate-50"
+        style={{ paddingBottom: useSafeAreaInsets().bottom }}
+      >
         <Text className="text-xl font-bold mb-4">
           Hi, {user?.name ?? "there"}!
         </Text>
@@ -143,8 +139,13 @@ const JobScreen = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 p-4" style={{paddingBottom: useSafeAreaInsets().bottom}}>
-      <Text className="text-xl font-bold mb-4">Hi, {user?.name ?? "there"}!</Text>
+    <SafeAreaView
+      className="flex-1 bg-slate-50 p-4"
+      style={{ paddingBottom: useSafeAreaInsets().bottom }}
+    >
+      <Text className="text-xl font-bold mb-4">
+        Hi, {user?.name ?? "there"}!
+      </Text>
       <View className="rounded-3xl h-40 bg-green-600 mb-4" />
       <Text className="text-2xl font-bold mb-4">Your Deliveries</Text>
       <FlatList
