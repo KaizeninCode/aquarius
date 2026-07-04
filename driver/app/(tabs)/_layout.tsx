@@ -42,7 +42,7 @@ const TabsLayout = () => {
           title: "Jobs",
           tabBarIcon: ({ focused, size, color }) => (
             <TabIcon
-              name={focused ? "home" : "home-outline"}
+              name={focused ? "briefcase" : "briefcase-outline"}
               color={color}
               size={size}
               focused={focused}

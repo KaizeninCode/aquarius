@@ -40,20 +40,6 @@ const ConfirmCodeScreen = () => {
       if (userRef.exists()) return; // returning user. skip the firestore rewrite
       
 
-      // persist address we collected earlier to the firestore now that we have a uid
-      let addressId: string | undefined;
-      if (setupData.address) {
-        const addressRef = await firestore().collection("addresses").add({
-          userId,
-          label: setupData.address.label,
-          lat: setupData.address.lat,
-          lng: setupData.address.lng,
-          notes: setupData.address.notes,
-          createdAt: firestore.FieldValue.serverTimestamp(),
-        });
-        addressId = addressRef.id;
-      }
-
       // write user document to firestore
       await firestore()
         .collection("users")
@@ -61,9 +47,8 @@ const ConfirmCodeScreen = () => {
         .set({
           name: setupData.name,
           phone: userCredential.user.phoneNumber,
-          role: "customer",
+          role: "driver",
           onboardingComplete: true,
-          defaultAddressId: addressId ?? null,
           createdAt: firestore.FieldValue.serverTimestamp(),
         });
 
@@ -101,7 +86,7 @@ const ConfirmCodeScreen = () => {
         {error && <Text className="font-red-500 mb-2.5">{error}</Text>}
 
         <TouchableOpacity
-          className={`py-4 rounded-2xl items-center ${confirming ? "bg-slate-200" : "bg-blue-500"}`}
+          className={`py-4 rounded-2xl items-center ${confirming ? "bg-slate-200" : "bg-green-600"}`}
           onPress={confirmCode}
           disabled={confirming}
         >

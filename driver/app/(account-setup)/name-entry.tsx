@@ -48,7 +48,7 @@ const NameEntry = () => {
       />
       {error && <Text className="text-[#dc2626] mb-3">{error}</Text>}
       <TouchableOpacity
-        className="bg-blue-500 p-4 rounded-2xl items-center"
+        className="bg-green-600 p-4 rounded-2xl items-center"
         onPress={handleContinue}
         // disabled={saving}
       >

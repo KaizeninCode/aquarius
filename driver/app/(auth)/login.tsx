@@ -57,7 +57,7 @@ const LoginScreen = () => {
           keyboardType="phone-pad"
         />
         <TouchableOpacity
-        className={`py-4 mt-5 rounded-2xl items-center ${sending ? "bg-slate-200" : "bg-blue-500"}`}
+        className={`py-4 mt-5 rounded-2xl items-center ${sending ? "bg-slate-200" : "bg-green-600"}`}
         onPress={sendCode}
         disabled={sending}
       >
