@@ -8,14 +8,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
 import { firestore, auth } from "@/FirebaseConfig";
 import { useCart } from "../../context/CartContext";
 import { useUser } from "@/app/context/UserContext";

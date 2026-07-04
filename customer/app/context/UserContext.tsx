@@ -1,6 +1,4 @@
 import { auth, firestore } from "@/FirebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, onSnapshot } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type UserData = {

@@ -8,14 +8,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  onSnapshot,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import { firestore, auth } from "@/FirebaseConfig";
 
 type OrderStatus =
@@ -60,7 +52,7 @@ const OrderHistory = () => {
 
   // fetch orders from firestore
   useEffect(() => {
-    const userId = getAuth().currentUser?.uid;
+    const userId = auth().currentUser?.uid;
     if (!userId) {
       setError("Not logged in. Please log in again.");
       setLoading(false);

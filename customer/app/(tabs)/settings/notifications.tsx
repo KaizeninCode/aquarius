@@ -10,8 +10,6 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
-import { doc, updateDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import { firestore, auth } from "@/FirebaseConfig";
 import { registerPushToken } from "@/utils/registerPushToken";
 
@@ -65,7 +63,7 @@ export default function NotificationsScreen() {
       }
 
       // Either undetermined (first ask) or previously granted
-      await registerPushToken(getAuth().currentUser!.uid);
+      await registerPushToken(auth().currentUser!.uid);
       await checkPermission(); // re-check after registering
     } catch (err) {
       console.error("Failed to enable notifications:", err);
@@ -76,7 +74,7 @@ export default function NotificationsScreen() {
 
   const handleDisable = async () => {
     setUpdating(true);
-    const userId = getAuth().currentUser?.uid;
+    const userId = auth().currentUser?.uid;
     if (!userId) return;
     try {
       // Remove token from Firestore — Cloud Function won't find a token to send to

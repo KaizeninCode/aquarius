@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from "react-native";
 import MapView, { Region } from "react-native-maps";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
-import { doc, getDoc, updateDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { db } from "@/FirebaseConfig";
+import { auth, firestore } from "@/FirebaseConfig";
 
 export default function EditAddressScreen() {
   const router = useRouter();
@@ -14,27 +19,32 @@ export default function EditAddressScreen() {
   const [label, setLabel] = useState("Home");
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
-  const [existingAddressId, setExistingAddressId] = useState<string | null>(null);
+  const [existingAddressId, setExistingAddressId] = useState<string | null>(
+    null,
+  );
 
   // Load existing default address (if any) to pre-fill, otherwise fall back to GPS
   useEffect(() => {
     (async () => {
-      const userId = getAuth().currentUser?.uid;
+      const userId = auth().currentUser?.uid;
       if (!userId) return;
 
-      const userSnap = await getDoc(doc(db, "users", userId));
+      const userSnap = await firestore().collection("users").doc(userId).get();
       const defaultAddressId = userSnap.data()?.defaultAddressId;
 
       if (defaultAddressId) {
-        const addrSnap = await getDoc(doc(db, "addresses", defaultAddressId));
+        const addrSnap = await firestore()
+          .collection("addresses")
+          .doc(userId)
+          .get();
         if (addrSnap.exists()) {
           const data = addrSnap.data();
           setExistingAddressId(addrSnap.id);
-          setLabel(data.label);
-          setNotes(data.notes);
+          setLabel(data?.label);
+          setNotes(data?.notes);
           setRegion({
-            latitude: data.lat,
-            longitude: data.lng,
+            latitude: data?.lat,
+            longitude: data?.lng,
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           });
@@ -45,7 +55,12 @@ export default function EditAddressScreen() {
       // No existing address — fall back to GPS, same as account-setup version
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setRegion({ latitude: -1.2921, longitude: 36.8219, latitudeDelta: 0.01, longitudeDelta: 0.01 });
+        setRegion({
+          latitude: -1.2921,
+          longitude: 36.8219,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        });
         return;
       }
       const loc = await Location.getCurrentPositionAsync({});
@@ -70,7 +85,7 @@ export default function EditAddressScreen() {
 
   const handleSave = async () => {
     if (!region) return;
-    const userId = getAuth().currentUser?.uid;
+    const userId = auth().currentUser?.uid;
     if (!userId) {
       Alert.alert("Not signed in", "Please log in again.");
       return;
@@ -80,7 +95,7 @@ export default function EditAddressScreen() {
     try {
       if (existingAddressId) {
         // Update the existing saved address in place
-        await updateDoc(doc(db, "addresses", existingAddressId), {
+        await firestore().collection("addresses").doc(userId).update({
           label,
           lat: region.latitude,
           lng: region.longitude,
@@ -88,15 +103,18 @@ export default function EditAddressScreen() {
         });
       } else {
         // No address existed yet — create one and set it as default
-        const ref = await addDoc(collection(db, "addresses"), {
+        const ref = await firestore().collection("addresses").add({
           userId,
           label,
           lat: region.latitude,
           lng: region.longitude,
           notes,
-          createdAt: serverTimestamp(),
+          createdAt: firestore.FieldValue.serverTimestamp(),
         });
-        await updateDoc(doc(db, "users", userId), { defaultAddressId: ref.id });
+        await firestore()
+          .collection("users")
+          .doc(userId)
+          .update({ defaultAddressId: ref.id });
       }
       router.back();
     } catch (err) {
@@ -117,8 +135,14 @@ export default function EditAddressScreen() {
         initialRegion={region}
         onRegionChangeComplete={setRegion}
       />
-      <View className="absolute top-1/2 left-1/2 -ml-[15px] -mt-[30px]" pointerEvents="none">
-        <Image source={require("../../../assets/pin.png")} style={{ width: 30, height: 30 }} />
+      <View
+        className="absolute top-1/2 left-1/2 -ml-[15px] -mt-[30px]"
+        pointerEvents="none"
+      >
+        <Image
+          source={require("../../../assets/pin.png")}
+          style={{ width: 30, height: 30 }}
+        />
       </View>
       <TouchableOpacity
         className="absolute bottom-56 right-4 bg-white p-2.5 rounded-full"
@@ -146,7 +170,9 @@ export default function EditAddressScreen() {
           onPress={handleSave}
           disabled={saving}
         >
-          <Text className="text-white font-bold">{saving ? "Saving..." : "Save Address"}</Text>
+          <Text className="text-white font-bold">
+            {saving ? "Saving..." : "Save Address"}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

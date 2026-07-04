@@ -1,13 +1,10 @@
 import React, { useState, useRef } from "react";
 import { View, TextInput, Button, Text, TouchableOpacity } from "react-native";
-// import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import { PhoneAuthProvider } from "firebase/auth";
 import { auth } from "../../FirebaseConfig";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
 const LoginScreen = () => {
-  const recaptchaVerifier = useRef(null);
   const [phone, setPhone] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");

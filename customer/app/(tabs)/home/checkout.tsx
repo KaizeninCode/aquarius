@@ -7,14 +7,6 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import {
-  doc,
-  getDoc,
-  collection,
-  addDoc,
-  serverTimestamp,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import { firestore, auth } from "@/FirebaseConfig";
 import { useCart } from "@/app/context/CartContext";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -37,7 +29,7 @@ const CheckoutPage = () => {
   useEffect(() => {
     (async () => {
       try {
-        const userId = getAuth().currentUser?.uid;
+        const userId = auth().currentUser?.uid;
         if (!userId) return;
 
         const userSnap = await firestore().collection('users').doc(userId).get();
@@ -67,8 +59,7 @@ const CheckoutPage = () => {
 
     if (items.length === 0) return;
 
-    const auth = getAuth();
-    const userId = auth.currentUser?.uid;
+    const userId = auth().currentUser?.uid;
     if (!userId) {
       Alert.alert("Not signed in. Please log in again.");
       return;
@@ -79,7 +70,7 @@ const CheckoutPage = () => {
     try {
       const userSnap = await firestore().collection('users').doc(userId).get();
       const customerName = userSnap.data()?.name ?? "Unknown";
-      const customerPhone = auth.currentUser?.phoneNumber ?? "";
+      const customerPhone = auth().currentUser?.phoneNumber ?? "";
 
       const orderRef = await firestore().collection('orders').add({
         customerId: userId,

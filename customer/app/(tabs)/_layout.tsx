@@ -20,22 +20,6 @@ const TabsLayout = () => {
       initialRouteName="home"
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-            backgroundColor: "#f8fafc",
-          // borderColor: '#0a0a0a',
-          // borderRadius: 40,
-        //   paddingBottom: 30,
-          overflow: "hidden",
-          // marginHorizontal: 20,
-          // marginBottom: 20,
-        //   height: 60,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          // animationName: 'slide'
-          // position: "absolute",
-        },
       }}
     >
       <Tabs.Screen

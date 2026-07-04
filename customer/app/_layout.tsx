@@ -3,7 +3,6 @@ import { StatusBar } from "expo-status-bar";
 import "../global.css";
 import React, { useState, useEffect } from "react";
 import { View, ActivityIndicator } from "react-native";
-import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/FirebaseConfig";
 import { SetupProvider } from "./context/SetupContext";
 import { CartProvider } from "./context/CartContext";

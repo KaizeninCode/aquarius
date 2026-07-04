@@ -8,16 +8,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  doc,
-  deleteDoc,
-  updateDoc,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import { useRouter } from "expo-router";
 import { firestore, auth } from "@/FirebaseConfig";
 import { useUser } from "../../context/UserContext";
@@ -38,7 +28,7 @@ export default function SavedAddressesScreen() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
 
-  const userId = getAuth().currentUser?.uid;
+  const userId = auth().currentUser?.uid;
 
   // Live listener on addresses collection
   useEffect(() => {

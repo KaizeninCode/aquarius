@@ -2,16 +2,7 @@ import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSetup } from "../context/SetupContext";
-import {
-  doc,
-  setDoc,
-  collection,
-  addDoc,
-  serverTimestamp,
-  getDoc,
-} from "firebase/firestore";
 import { firestore, auth } from "@/FirebaseConfig";
-import { PhoneAuthProvider, signInWithCredential } from "firebase/auth";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { registerPushToken } from "@/utils/registerPushToken";
 import AsyncStorage from "@react-native-async-storage/async-storage";

@@ -1,7 +1,6 @@
 import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { doc, onSnapshot } from "firebase/firestore";
 import { firestore, auth } from "@/FirebaseConfig";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
