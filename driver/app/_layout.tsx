@@ -22,7 +22,7 @@ export default function RootLayout() {
     const loadIntroFlag = async () => {
       try {
         const seen = await AsyncStorage.getItem("hasSeenIntro");
-        // console.log("Raw AsyncStorage value:", seen) // test log to confirm the existence & state of the flag
+        console.log("Raw AsyncStorage value:", seen) // test log to confirm the existence & state of the flag
         setHasSeenIntro(seen === "true");
       } catch (error) {
         console.warn("Failed to read intro flag", error);

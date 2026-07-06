@@ -8,6 +8,12 @@
     "scheme": "driver",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "updates": {
+      "url":"https://u.expo.dev/b5917053-1ab8-49c4-8b09-2f35d4896a26"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.aquarius.driver",

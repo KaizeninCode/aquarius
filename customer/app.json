@@ -8,6 +8,12 @@
     "scheme": "customer",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "updates": {
+      "url":"https://u.expo.dev/96da6348-8141-42e5-9cd6-a93f7e35f47f"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.aquarius.customer",

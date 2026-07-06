@@ -100,7 +100,6 @@ const SettingsScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-slate-50 p-4" style={{paddingBottom: useSafeAreaInsets().bottom}}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}
       >
         <ProfileHeader name={user?.name ?? ''} phone={user?.phone ?? ''} />
