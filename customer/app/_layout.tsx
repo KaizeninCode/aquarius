@@ -36,11 +36,13 @@ export default function RootLayout() {
 
   // listen for auth state. This determines what the user will be shown
   useEffect(() => {
-    const unsubscribe = auth().onAuthStateChanged( (user) => {
+    const unsubscribe = auth().onAuthStateChanged( async (user) => {
       // console.log("===== AUTH CHANGED =====");
       // console.log("User:", user);
       // console.log("UID:", user?.uid);
       // console.log("Email:", user?.email);
+      await AsyncStorage.setItem("hasSeenIntro", "true");
+      setHasSeenIntro(true);
 
       setAppState(user ? "main" : "signedOut");
     });

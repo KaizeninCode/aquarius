@@ -86,7 +86,7 @@ const SettingsScreen = () => {
                 color="#ef4444"
               />
             ),
-            onPress: () => auth().signOut(),
+            onPress: async () => await auth().signOut(),
             danger: true,
           },
         ],

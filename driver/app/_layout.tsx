@@ -2,7 +2,7 @@ import { Slot, useRouter, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "../global.css";
 import React, { useState, useEffect } from "react";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, Text } from "react-native";
 import { auth, firestore } from "@/firebaseConfig";
 import * as Notifications from 'expo-notifications'
 import { SetupProvider } from "@/context/SetupContext";
@@ -22,7 +22,7 @@ export default function RootLayout() {
     const loadIntroFlag = async () => {
       try {
         const seen = await AsyncStorage.getItem("hasSeenIntro");
-        console.log("Raw AsyncStorage value:", seen) // test log to confirm the existence & state of the flag
+        // console.log("Raw AsyncStorage value:", seen) // test log to confirm the existence & state of the flag
         setHasSeenIntro(seen === "true");
       } catch (error) {
         console.warn("Failed to read intro flag", error);
@@ -36,11 +36,13 @@ export default function RootLayout() {
 
   // listen for auth state. This determines what the user will be shown
   useEffect(() => {
-    const unsubscribe = auth().onAuthStateChanged((user:any) => {
+    const unsubscribe = auth().onAuthStateChanged(async (user:any) => {
       // console.log("===== AUTH CHANGED =====");
       // console.log("User:", user);
       // console.log("UID:", user?.uid);
       // console.log("Email:", user?.email);
+      await AsyncStorage.setItem("hasSeenIntro", "true");
+      setHasSeenIntro(true);
 
       setAppState(user ? "main" : "signedOut");
     });
@@ -52,7 +54,7 @@ export default function RootLayout() {
     if (appState === "loading") return;
     if (hasSeenIntro === null) return;
     const group = segments[0];
-    // console.log("Redirect check — appState:", appState, "hasSeenIntro:", hasSeenIntro, "group:", group)
+    // console.log("hasSeenIntro:", hasSeenIntro)
 
     const inIntroGroup = group === "(intro)";
     const inAccountSetupGroup = group === "(account-setup)";
@@ -81,10 +83,11 @@ export default function RootLayout() {
   return () => subscription.remove();
 }, []);
 
-  if (appState === "loading") {
+  if (appState === "loading" || hasSeenIntro === null) {
     return (
       <View className="flex-1 justify-center items-center">
         <ActivityIndicator size={"large"} />
+        <Text>hasSeenIntro: {String(hasSeenIntro)}</Text>
       </View>
     );
   }

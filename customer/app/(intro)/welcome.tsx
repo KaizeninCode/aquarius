@@ -21,6 +21,11 @@ const info = () => {
       >
         <Text className="uppercase text-white">Get Started</Text>
       </TouchableOpacity>
+      <TouchableOpacity className="mb-10" onPress={() => router.replace("/(auth)/login")}>
+        <Text className="uppercase text-blue-500">
+          I already have an account
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
