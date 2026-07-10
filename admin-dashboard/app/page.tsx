@@ -18,7 +18,8 @@ import {
 } from "firebase/auth";
 import { db, auth } from "@/firebaseConfig";
 import Aside from "./components/Aside";
-import Header from "./components/Header";
+import {Header} from "./components/Header";
+import Footer from "./components/Footer";
 import Orders from "./components/Orders";
 import { redirect } from "next/navigation";
 
@@ -99,8 +100,8 @@ const AdminMainPage = () => {
   // auth check
   useEffect(() => {
     return onAuthStateChanged(auth, (user) => {
-      setAuthed(!!user)
-      setAuthLoading(false)
+      setAuthed(!!user);
+      setAuthLoading(false);
     });
   }, []);
 
@@ -165,16 +166,17 @@ const AdminMainPage = () => {
   ];
 
   // login
-  if (authLoading) return null
+  if (authLoading) return null;
   if (!authed) {
-    window.location.href="/auth/login"
-    return null
-  };
+    window.location.href = "/auth/login";
+    return null;
+  }
 
   // Main Dashboard
   return (
     <main className="min-h-screen bg-slate-50">
       {/* <Aside/> */}
+      <Header/>
       <div className="max-w-4xl mx-auto px-4 py-6">
         {/* MAIN DASHBOARD LAYOUT */}
         <div className="w-full rounded-lg bg-blue-500 h-1/5 p-4 mb-5">
@@ -183,7 +185,7 @@ const AdminMainPage = () => {
         <h2 className="text-xl font-semibold text-slate-900 mb-5">Summary</h2>
 
         {/* FIRST ROW */}
-        <div className="grid grid-cols-3 gap-5 mb-5">
+        <div className="grid md:grid-cols-3 gap-5 mb-5">
           {summaryCards.map((card, i) => (
             <div
               key={i}
@@ -200,6 +202,7 @@ const AdminMainPage = () => {
         {/* ORDERS COMPONENT */}
         <Orders />
       </div>
+      <Footer/>
     </main>
   );
 };
