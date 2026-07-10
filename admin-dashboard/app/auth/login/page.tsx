@@ -16,7 +16,7 @@ const Login = () => {
     setLoginError("");
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/dashboard') 
+      router.push('/') 
     } catch (error) {
       console.log(error);
       setLoginError("Invalid email or password.");
