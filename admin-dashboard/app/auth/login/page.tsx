@@ -24,9 +24,9 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center gap-10 bg-slate-50">
+    <div className="min-h-screen flex max-md:flex-col-reverse items-center justify-center gap-10 bg-slate-50">
       
-      <div className="w-2/5 h-full flex items-center justify-center">
+      <div className="md:w-2/5 h-full flex items-center justify-center max-md:mb-10">
         <div className="bg-white border border-slate-200 rounded-2xl p-8 w-full max-w-sm shadow-sm">
           <h2 className="text-xl text-center font-bold mb-6 text-slate-950">
             Aquarius Admin
@@ -57,7 +57,7 @@ const Login = () => {
           </button>
         </div>
       </div>
-      <div className='bg-blue-600 h-screen w-3/5 flex flex-col items-center justify-center text-center'>
+      <div className='bg-blue-600 h-screen md:w-3/5 flex flex-col items-center justify-center text-center'>
         <h1 className='font-bold mb-5 text-6xl'>Aquarius Admin Dashboard</h1>
         <h5 className="text-2xl">Manage your clients, orders, and business finances.</h5>
       </div>
