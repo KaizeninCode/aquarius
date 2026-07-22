@@ -30,7 +30,7 @@ const faqs = [
   },
 ];
 
-const CONTACT_PHONE = "+254741026083"; // replace with real number -> business' contact
+const CONTACT_PHONE = "+254741026083"; // replace with real number -> business contact
 
 export default function HelpCenterScreen() {
   const handleCall = () => Linking.openURL(`tel:${CONTACT_PHONE}`);

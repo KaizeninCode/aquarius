@@ -12,28 +12,20 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { doc, updateDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { db } from "@/firebaseConfig";
+import { firestore, auth } from "@/firebaseConfig";
 import { registerPushToken } from "@/utils/registerPushToken";
 
 type PermissionState = "loading" | "unavailable" | "granted" | "denied" | "undetermined";
 
 const NOTIFICATION_TYPES = [
   {
-    title: "Order Confirmed",
-    description: "When the shop confirms your order",
+    title: "New Delivery Assigned",
+    description: "When the admin assigns an order to you",
   },
   {
-    title: "Driver Assigned",
-    description: "When a driver is assigned to your delivery",
-  },
-  {
-    title: "Out for Delivery",
-    description: "When your driver is on their way",
-  },
-  {
-    title: "Order Delivered",
-    description: "When your delivery has arrived",
-  },
+    title: "Delivery Cancelled",
+    description: "When an assigned delivery is cancelled by the shop",
+  }
 ];
 
 export default function NotificationsScreen() {
@@ -80,7 +72,7 @@ export default function NotificationsScreen() {
     if (!userId) return;
     try {
       // Remove token from Firestore — Cloud Function won't find a token to send to
-      await updateDoc(doc(db, "users", userId), { pushToken: null });
+      await firestore().collection('users').doc(userId).update( { pushToken: null });
       // Note: we don't revoke the OS-level permission since that requires device settings.
       // Clearing the token is sufficient — no token = no notifications from our system.
       setPermissionState("denied");
@@ -106,7 +98,7 @@ export default function NotificationsScreen() {
       <View className="p-6 flex-1">
         <Text className="text-2xl font-bold mb-2">Notifications</Text>
         <Text className="text-slate-500 text-sm mb-8">
-          Control when this app can notify you about your orders.
+          Control when this app can send you delivery alerts.
         </Text>
 
         {/* Unavailable on simulator */}
@@ -123,12 +115,12 @@ export default function NotificationsScreen() {
           <View className="flex-row justify-between items-center">
             <View className="flex-1 mr-4">
               <Text className="text-base font-semibold text-slate-900">
-                Order Notifications
+                Delivery Notifications
               </Text>
               <Text className="text-sm text-slate-500 mt-0.5">
                 {isEnabled
-                  ? "You'll be notified at each step of your order."
-                  : "Enable to get updates on your deliveries."}
+                  ? "You'll be notified when deliveries are assigned to you."
+                  : "Enable to get notified about new assignments."}
               </Text>
             </View>
             <Switch

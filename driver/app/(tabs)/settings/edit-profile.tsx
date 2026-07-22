@@ -58,7 +58,7 @@ const EditProfileScreen = () => {
 
   return (
     <SafeAreaView className='flex-1 bg-slate-50 p-4' style={{paddingBottom: useSafeAreaInsets().bottom}}>
-      <View className="p-6 flex-1">
+      <View className="flex-1">
         <Text className="text-2xl font-bold mb-2">Edit Profile</Text>
         <Text className="text-slate-500 text-sm mb-8">
           Update your display name. This is what customers will see on their
